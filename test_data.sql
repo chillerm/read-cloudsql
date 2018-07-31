@@ -4,12 +4,13 @@ DROP TABLE IF EXISTS test;
 
 CREATE TABLE test
 (
-    column_1 int ,
-    column_2 varchar(500)
+    column_1 INT ,
+    column_2 VARCHAR(500),
+    last_updated TIMESTAMP
 );
 
-INSERT INTO test (column_1, column_2)
- VALUES (1, 'One'),
-        (2, 'Two'),
-        (3, 'Three')
+INSERT INTO test (column_1, column_2, last_updated)
+ VALUES (1, 'One', CURRENT_TIMESTAMP() ),
+        (2, 'Two', CURRENT_TIMESTAMP() ),
+        (3, 'Three', CURRENT_TIMESTAMP() )
 ;
