@@ -1,0 +1,9 @@
+version: '3'
+services:
+  test-mysql:
+    container_name: test-mysql-container
+    restart: always
+    build:
+      context: .
+    ports:
+      - "3306:3306"
