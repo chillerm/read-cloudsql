@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+group 'hillermann.carl.examples.beam.cloudsql'
+version '1.0-SNAPSHOT'
+ext {
+    beamVersion = '2.5.0'
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/com.google.cloud.dataflow/google-cloud-dataflow-java-sdk-all
+    compile group: 'com.google.cloud.dataflow', name: 'google-cloud-dataflow-java-sdk-all', version: beamVersion
+
+    testCompile "org.apache.beam:beam-runners-direct-java:${beamVersion}"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
