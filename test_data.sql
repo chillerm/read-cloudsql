@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS test;
 
 CREATE TABLE test
 (
-    column_1 INT ,
+    column_1 INT PRIMARY KEY,
     column_2 VARCHAR(500),
     last_updated TIMESTAMP
 );

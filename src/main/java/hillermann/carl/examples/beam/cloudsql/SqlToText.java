@@ -11,7 +11,7 @@ import org.apache.beam.sdk.values.TypeDescriptors;
 import java.sql.ResultSet;
 
 
-public class SqlToBigQuery {
+public class SqlToText {
 
     public interface SqlToBigQueryOptions extends PipelineOptions {
         @Description("Database and table to extract. (Format: \"database_name.table_name\")")
