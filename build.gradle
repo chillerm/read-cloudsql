@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'net.ltgt.apt' version '0.10'
 }
 
 group 'hillermann.carl.examples.beam.cloudsql'
@@ -15,10 +16,13 @@ repositories {
 }
 
 dependencies {
+    apt 'org.projectlombok:lombok:1.18.2'
+
     compile group: 'com.google.cloud.dataflow', name: 'google-cloud-dataflow-java-sdk-all', version: beamVersion
     compile group: 'org.apache.beam', name: 'beam-sdks-java-io-jdbc', version: '2.5.0'
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
 
+    compileOnly 'org.projectlombok:lombok:1.18.2'
 
     testCompile "org.apache.beam:beam-runners-direct-java:${beamVersion}"
     testCompile group: 'junit', name: 'junit', version: '4.12'
