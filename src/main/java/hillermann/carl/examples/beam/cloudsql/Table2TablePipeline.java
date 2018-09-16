@@ -1,12 +1,8 @@
 package hillermann.carl.examples.beam.cloudsql;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.coders.AvroCoder;
-import org.apache.beam.sdk.coders.DefaultCoder;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.io.jdbc.JdbcIO;
 import org.apache.beam.sdk.options.*;
@@ -39,7 +35,7 @@ public class Table2TablePipeline {
         Pipeline p = Pipeline.create(options);
 
         PCollection<Dummy> dummies = p
-                .apply("ReadLines", JdbcIO.<Dummy>read().withDataSourceConfiguration(getTestDataSource())
+                .apply("ReadLines", JdbcIO.<Dummy>read().withDataSourceConfiguration(PlayGroundUtils.getTestDataSource())
                         .withQuery("SELECT * from " + options.getInputTable())
                         .withRowMapper((JdbcIO.RowMapper<Dummy>) resultSet -> new Dummy(
                                 resultSet.getLong("ID"),
@@ -64,7 +60,7 @@ public class Table2TablePipeline {
                         }
                     }
                 })
-                .withDataSourceConfiguration(getTestDataSource())
+                .withDataSourceConfiguration(PlayGroundUtils.getTestDataSource())
         );
 
         // Write out the sql statements.  Typically we would not do this, we would rather write the object as the
@@ -85,34 +81,4 @@ public class Table2TablePipeline {
         run(options);
     }
 
-    @DefaultCoder(AvroCoder.class)
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    private static class Dummy {
-        private long id;
-        private long itemId;
-        private float price;
-        private String lastUpdated;
-
-        private static String toMergeStatement() {
-            // The insert below is really a merge that is idempotent.
-            return "INSERT INTO test.REMOTE_DUMMY\n" +
-                    "    (ID, ITEM_ID, PRICE, LAST_UPDATED)\n" +
-                    "VALUES\n" +
-                    "       (?, ?, ?, ?)\n" +
-                    "ON DUPLICATE KEY UPDATE\n" +
-                    "    ITEM_ID = IF(LAST_UPDATED <= VALUES(LAST_UPDATED), VALUES(ITEM_ID), ITEM_ID)\n" +
-                    "    , PRICE = IF(LAST_UPDATED <= VALUES(LAST_UPDATED), VALUES(PRICE), PRICE)\n" +
-                    "    , LAST_UPDATED = IF(LAST_UPDATED <= VALUES(LAST_UPDATED), VALUES(LAST_UPDATED), LAST_UPDATED)\n" +
-                    ";";
-        }
-    }
-
-    private static JdbcIO.DataSourceConfiguration getTestDataSource() {
-        return JdbcIO.DataSourceConfiguration.create("com.mysql.jdbc.Driver"
-                , "jdbc:mysql://localhost:3306/test")
-                .withUsername("root")
-                .withPassword("test");
-    }
 }
